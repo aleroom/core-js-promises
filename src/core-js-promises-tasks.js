@@ -157,8 +157,17 @@ function getAllResult(/* promises */) {
  * [promise1, promise4, promise3] => Promise.resolved('104030')
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
-function queuePromises(/* promises */) {
-  throw new Error('Not implemented');
+function queuePromises(promises) {
+  if (!Array.isArray(promises)) {
+    return Promise.reject(new Error('Input must be an array'));
+  }
+  return promises.reduce((chain, promise) => {
+    return chain.then((result) => {
+      return promise.then((value) => {
+        return result + value.toString();
+      });
+    });
+  }, Promise.resolve(''));
 }
 
 module.exports = {
